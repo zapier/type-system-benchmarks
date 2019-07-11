@@ -1,0 +1,5 @@
+{
+  "apps": ["js+flow", "ts-tsc", "ts-babel"],
+  "benchmarks": ["webpack", ["webpack", { "clearCache": false }], "typecheck"],
+  "generatorOptions": [{ "components": 5000, "props": 20 }]
+}
