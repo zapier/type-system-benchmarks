@@ -1,5 +1,15 @@
-# TypeScript and Flow Benchmarking
+# Build Benchmarks
 
-This repo contains two NodeJS projects:
-- `flow-test-app`: a create-react-app application with Flow typing added
-- `typescript-test-app`: a create-react-app application with TypeScript (bootstrapped with `--typescript` flag)
+👷‍♂️🚧
+
+## Usage
+
+To run all the benchmarks:
+
+```
+yarn benchmark
+```
+
+You can modify the `matrix.json` file to customize the benchmarks to run.
+
+👷‍♂️🚧 More documentation to come...
