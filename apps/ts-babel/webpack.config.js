@@ -1,4 +1,3 @@
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const threadLoader = require('thread-loader')
 
 module.exports = ({ baseConfig, options }) => {
@@ -32,13 +31,6 @@ module.exports = ({ baseConfig, options }) => {
           ]
         }
       ]
-    },
-    plugins: [
-      !options.transpileOnly &&
-        new ForkTsCheckerWebpackPlugin({
-          workers: options.typeCheckerWorkers,
-          silent: true
-        })
-    ].filter(Boolean)
+    }
   }
 }
