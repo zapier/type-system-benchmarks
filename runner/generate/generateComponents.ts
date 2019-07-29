@@ -41,10 +41,11 @@ const generateJSComponent = (propsCount: number): ComponentDefinition => {
 
   const source = `
     import React from 'react'
+    import map from 'lodash/map';
 
     const ${name} = (props) => (
       <div>
-        {Object.keys(props).map(key => <span>{props[key]}</span>)}
+        {map(props, (_v, key) => <span>{props[key]}</span>)}
       </div>
     )
 
@@ -67,6 +68,7 @@ const generateJSFlowComponent = (propsCount: number): ComponentDefinition => {
   const source = `
     // @flow
     import React from 'react'
+    import map from 'lodash/map';
 
     type ${name}Props = {
       ${props.map(prop => `${prop.name}?: ${prop.type}`).join(',\n' + ' '.repeat(6))}
@@ -74,7 +76,7 @@ const generateJSFlowComponent = (propsCount: number): ComponentDefinition => {
 
     const ${name} = (props: ${name}Props) => (
       <div>
-        {Object.keys(props).map(key => <span>{props[key]}</span>)}
+        {map(props, (_v, key) => <span>{props[key]}</span>)}
       </div>
     )
 
@@ -96,6 +98,7 @@ const generateTSComponent = (propsCount: number): ComponentDefinition => {
 
   const source = `
     import React, { FC } from 'react'
+    import map from 'lodash/map';
 
     interface ${name}Props {
       ${props.map(prop => `${prop.name}?: ${prop.type}`).join('\n' + ' '.repeat(6))}
@@ -103,7 +106,7 @@ const generateTSComponent = (propsCount: number): ComponentDefinition => {
 
     const ${name}: FC<${name}Props> = (props) => (
       <div>
-        {Object.keys(props).map(key => <span>{props[key as keyof ${name}Props]}</span>)}
+        {map(props, (_v, key) => <span>{props[key]}</span>)}
       </div>
     )
 
