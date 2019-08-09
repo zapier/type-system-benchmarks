@@ -23,12 +23,18 @@ module.exports = ({ baseConfig, options }) => {
           test: /\.js$/,
           exclude: /node_modules/,
           use: [
+            options.cacheDirectory && {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: options.cacheDirectory
+              }
+            },
             {
               loader: 'thread-loader',
               options: workerPool
             },
             'babel-loader'
-          ]
+          ].filter(Boolean)
         }
       ]
     }

@@ -19,6 +19,12 @@ module.exports = ({ baseConfig, options }) => {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
+            options.cacheDirectory && {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: options.cacheDirectory
+              }
+            },
             {
               loader: 'thread-loader',
               options: workerPool
@@ -33,7 +39,7 @@ module.exports = ({ baseConfig, options }) => {
                 }
               }
             }
-          ]
+          ].filter(Boolean)
         }
       ]
     },
