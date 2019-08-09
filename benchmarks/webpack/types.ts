@@ -1,5 +1,5 @@
 export interface WebpackOptions {
-  clearCache?: boolean
+  useCache?: boolean
   transpileOnly: boolean
 }
 
