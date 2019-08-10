@@ -1,13 +1,20 @@
 import path from 'path'
+import parser, { Arguments } from 'yargs-parser'
 
 import Runner from './Runner'
-import { TableReporter } from './reporters'
+import { JsonReporter, TableReporter } from './reporters'
 import { BenchmarkMatrix } from './types'
 import { getBenchmark } from './util'
 
-const main = async (matrixPath: string) => {
-  const matrix: BenchmarkMatrix = require(path.resolve(matrixPath))
-  const reporter = new TableReporter()
+const parseArguments = (args: Arguments) => ({
+  matrixPath: args._[0] || 'matrix.json',
+  reporter: args.reporter === 'json' ? JsonReporter : TableReporter
+})
+
+const main = async (args: Arguments) => {
+  const options = parseArguments(args)
+  const matrix: BenchmarkMatrix = require(path.resolve(options.matrixPath))
+  const reporter = new options.reporter()
   const runner = new Runner(matrix, reporter)
 
   for (const benchmarkConfig of matrix.benchmarks) {
@@ -23,4 +30,4 @@ const main = async (matrixPath: string) => {
   await runner.run()
 }
 
-main(process.argv[2])
+main(parser(process.argv.slice(2)))
