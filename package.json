@@ -1,10 +1,10 @@
 {
   "private": true,
-  "name": "typescript-flow-benchmark",
+  "name": "type-system-benchmarks",
   "version": "0.0.1",
-  "description": "Typescript vs Flow benchmarks",
+  "description": "Type System Benchmarks.",
   "main": "index.js",
-  "repository": "zapier/typescript-flow-benchmark.git",
+  "repository": "zapier/type-system-benchmarks.git",
   "author": "ngryman <ngryman@gmail.com>",
   "license": "UNLICENSED",
   "scripts": {
