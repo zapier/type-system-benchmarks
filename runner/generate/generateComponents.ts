@@ -1,5 +1,5 @@
 import { GeneratorOptions, Language } from '../types'
-import { ComponentDefinition, PropType } from './types'
+import { ComponentDefinition, PropType, PropDefinition, PropValue } from './types'
 
 const generateComponentId = (() => {
   let id = 1
@@ -14,7 +14,7 @@ const generatePropId = (() => {
 const generateType = (): PropType =>
   [PropType.string, PropType.number, PropType.boolean][(Math.random() * 3) | 0]
 
-const generateValueFromType = (type: PropType): any =>
+const generateValueFromType = (type: PropType): PropValue =>
   ({
     [PropType.string]: Math.random()
       .toString(36)
@@ -23,7 +23,7 @@ const generateValueFromType = (type: PropType): any =>
     [PropType.boolean]: Math.random() > 0.5
   }[type])
 
-const generateProp = () => {
+const generateProp = (): PropDefinition => {
   const type = generateType()
 
   return {
@@ -33,7 +33,32 @@ const generateProp = () => {
   }
 }
 
-const generateProps = (propsCount: number) => [...Array(propsCount)].map(generateProp)
+const generateProps = (propsCount: number): PropDefinition[] =>
+  [...Array(propsCount)].map(generateProp)
+
+const renderTypeDeclaration = (name: string, props: PropDefinition[]): string => `
+  type ${name}Props = {
+    ${props.map(prop => `${prop.name}?: ${prop.type}`).join(',\n')}
+  }
+`
+
+const renderDefaultProps = (name: string, props: PropDefinition[]): string => `
+  ${name}.defaultProps = {
+    ${props
+      .map(prop => `${prop.name}: ${prop.type === 'string' ? `'${prop.value}'` : prop.value}`)
+      .join(',\n')}
+  }
+`
+
+const renderComponentJSX = (
+  { propsIndex } = {
+    propsIndex: 'key'
+  }
+): string => `
+  <div>
+    {Object.keys(props).map(key => <span>{props[${propsIndex}]}</span>)}
+  </div>
+`
 
 const generateJSComponent = (propsCount: number): ComponentDefinition => {
   const name = `Component$${generateComponentId()}`
@@ -43,16 +68,10 @@ const generateJSComponent = (propsCount: number): ComponentDefinition => {
     import React from 'react'
 
     const ${name} = (props) => (
-      <div>
-        {Object.keys(props).map(key => <span>{props[key]}</span>)}
-      </div>
+      ${renderComponentJSX()}
     )
 
-    ${name}.defaultProps = {
-      ${props
-        .map(prop => `${prop.name}: ${prop.type === 'string' ? `'${prop.value}'` : prop.value}`)
-        .join(',\n' + ' '.repeat(6))}
-    }
+    ${renderDefaultProps(name, props)}
 
     export default ${name}
   `
@@ -68,21 +87,13 @@ const generateJSFlowComponent = (propsCount: number): ComponentDefinition => {
     // @flow
     import React from 'react'
 
-    type ${name}Props = {
-      ${props.map(prop => `${prop.name}?: ${prop.type}`).join(',\n' + ' '.repeat(6))}
-    }
+    ${renderTypeDeclaration(name, props)}
 
     const ${name} = (props: ${name}Props) => (
-      <div>
-        {Object.keys(props).map(key => <span>{props[key]}</span>)}
-      </div>
+      ${renderComponentJSX()}
     )
 
-    ${name}.defaultProps = {
-      ${props
-        .map(prop => `${prop.name}: ${prop.type === 'string' ? `'${prop.value}'` : prop.value}`)
-        .join(',\n' + ' '.repeat(6))}
-    }
+    ${renderDefaultProps(name, props)}
 
     export default ${name}
   `
@@ -97,21 +108,15 @@ const generateTSComponent = (propsCount: number): ComponentDefinition => {
   const source = `
     import React, { FC } from 'react'
 
-    interface ${name}Props {
-      ${props.map(prop => `${prop.name}?: ${prop.type}`).join('\n' + ' '.repeat(6))}
-    }
+    ${renderTypeDeclaration(name, props)}
 
     const ${name}: FC<${name}Props> = (props) => (
-      <div>
-        {Object.keys(props).map(key => <span>{props[key as keyof ${name}Props]}</span>)}
-      </div>
+      ${renderComponentJSX({
+        propsIndex: 'key as keyof ${name}Props'
+      })}
     )
 
-    ${name}.defaultProps = {
-      ${props
-        .map(prop => `${prop.name}: ${prop.type === 'string' ? `'${prop.value}'` : prop.value}`)
-        .join(',\n' + ' '.repeat(6))}
-    }
+    ${renderDefaultProps(name, props)}
 
     export default ${name}
   `

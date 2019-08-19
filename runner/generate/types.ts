@@ -4,6 +4,14 @@ export enum PropType {
   boolean = 'boolean'
 }
 
+export type PropDefinition = {
+  name: string
+  type: PropType
+  value: string
+}
+
+export type PropValue = any
+
 export interface ComponentDefinition {
   name: string
   source: string
