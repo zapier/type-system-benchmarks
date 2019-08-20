@@ -2,6 +2,11 @@
 
 `type-system-benchmarks` aims to compare the bare performance of Flow and Typescript on real world projects.
 
+<p align="center">
+  <img src="https://zappy.zapier.com/68B8F1FA-BE29-4219-9FDD-49A49F2FDCA1.png" />
+  <em>Typescript 3.5 vs Flow 0.102</em>
+</p>
+
 ## Usage
 
 To run all the benchmarks:
